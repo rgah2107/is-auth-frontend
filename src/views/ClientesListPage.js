@@ -14,6 +14,8 @@ import {
   TextField,
   Tooltip,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
@@ -32,6 +34,8 @@ export function ClientesListPage() {
   const { userid } = useAuth();
   const { showMessage } = useSnackbar();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [filters, setFilters] = useState({ identificacion: '', nombre: '' });
   const [rows, setRows] = useState([]);
@@ -62,15 +66,15 @@ export function ClientesListPage() {
 
   const columns = useMemo(
     () => [
-      { field: 'identificacion', headerName: 'Identificación', flex: 1, minWidth: 140 },
-      { field: 'nombre', headerName: 'Nombre', flex: 1, minWidth: 160 },
-      { field: 'apellidos', headerName: 'Apellidos', flex: 1, minWidth: 180 },
+      { field: 'identificacion', headerName: 'Identificación', flex: 1, minWidth: isSmall ? 120 : 140 },
+      { field: 'nombre', headerName: 'Nombre', flex: 1, minWidth: isSmall ? 140 : 160 },
+      { field: 'apellidos', headerName: 'Apellidos', flex: 1, minWidth: isSmall ? 160 : 180 },
       {
         field: 'acciones',
         headerName: 'Acciones',
         sortable: false,
         filterable: false,
-        width: 140,
+        width: isSmall ? 120 : 140,
         renderCell: (params) => (
           <Stack direction="row" spacing={1}>
             <Tooltip title="Editar">
@@ -87,7 +91,7 @@ export function ClientesListPage() {
         ),
       },
     ],
-    [navigate]
+    [isSmall, navigate]
   );
 
   const onConfirmDelete = async () => {
@@ -158,7 +162,14 @@ export function ClientesListPage() {
 
         <Card>
           <CardContent>
-            <Box sx={{ height: 460, width: '100%' }}>
+            <Box
+              sx={{
+                height: { xs: 380, sm: 460 },
+                width: '100%',
+                overflowX: 'auto',
+                WebkitOverflowScrolling: 'touch',
+              }}
+            >
               <DataGrid
                 rows={rows}
                 columns={columns}
@@ -167,6 +178,23 @@ export function ClientesListPage() {
                 disableRowSelectionOnClick
                 pageSizeOptions={[5, 10, 25]}
                 initialState={{ pagination: { paginationModel: { pageSize: 10, page: 0 } } }}
+                columnVisibilityModel={{
+                  apellidos: !isSmall,
+                }}
+                density={isSmall ? 'compact' : 'standard'}
+                sx={{
+                  width: '100%',
+                  '& .MuiDataGrid-cell, & .MuiDataGrid-columnHeaderTitle': {
+                    whiteSpace: 'nowrap',
+                  },
+                  '& .MuiDataGrid-virtualScroller': {
+                    overflowX: 'auto',
+                    touchAction: 'pan-x pan-y',
+                  },
+                  '& .MuiDataGrid-columnHeaders': {
+                    touchAction: 'pan-x pan-y',
+                  },
+                }}
               />
             </Box>
           </CardContent>
