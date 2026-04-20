@@ -38,7 +38,7 @@ export function AppLayout({ children, title }) {
 
   const drawer = (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ p: 2 }}>
+      <Box sx={{ p: 2, pt: { xs: 10, md: 13 }  }}>
         <Typography variant="subtitle2" color="text.secondary">
           Usuario en sesión
         </Typography>
