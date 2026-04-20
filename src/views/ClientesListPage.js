@@ -179,6 +179,7 @@ export function ClientesListPage() {
                 pageSizeOptions={[5, 10, 25]}
                 initialState={{ pagination: { paginationModel: { pageSize: 10, page: 0 } } }}
                 columnVisibilityModel={{
+                  identificacion: !isSmall,
                   apellidos: !isSmall,
                 }}
                 density={isSmall ? 'compact' : 'standard'}
